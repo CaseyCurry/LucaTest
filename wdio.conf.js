@@ -45,7 +45,7 @@ exports.config = {
     // 5 instances get started at a time.
     maxInstances: 5,
     //
-    browserName: "chrome"
+    browserName: "phantomjs"
   }],
   //
   // ===================
@@ -108,7 +108,8 @@ exports.config = {
   // your test setup with almost no effort. Unlike plugins, they don"t add new
   // commands. Instead, they hook themselves up into the test process.
   services: [
-    "selenium-standalone"
+    "selenium-standalone",
+    "phantomjs"
   ],
   //
   // see also: http://webdriver.io/guide/testrunner/frameworks.html
