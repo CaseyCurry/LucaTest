@@ -45,7 +45,7 @@ exports.config = {
     // 5 instances get started at a time.
     maxInstances: 5,
     //
-    browserName: "phantomjs"
+    browserName: "chrome"
   }],
   //
   // ===================
@@ -69,7 +69,7 @@ exports.config = {
   bail: 0,
   //
   // Saves a screenshot to a given path if a command fails.
-  screenshotPath: "./errorShots/",
+  screenshotPath: "./error-shots/",
   //
   // Set a base URL in order to shorten url command calls. If your url parameter starts
   // with "/", then the base url gets prepended.
@@ -108,27 +108,24 @@ exports.config = {
   // your test setup with almost no effort. Unlike plugins, they don"t add new
   // commands. Instead, they hook themselves up into the test process.
   services: [
-    "selenium-standalone",
-    "phantomjs"
+    "selenium-standalone"
   ],
   //
-  // Framework you want to run your specs with.
-  // The following are supported: Mocha, Jasmine, and Cucumber
   // see also: http://webdriver.io/guide/testrunner/frameworks.html
-  //
-  // Make sure you have the wdio adapter package for the specific framework installed
-  // before running any tests.
-  // framework: "jasmine",
   framework: "cucumber",
   //
-  // Test reporter for stdout.
-  // The only one supported by default is "dot"
   // see also: http://webdriver.io/guide/testrunner/reporters.html
-  reporters: ["spec"],
+  reporters: ["cucumber", "junit"],
+  reporterOptions: {
+    outputDir: "./results",
+    outputFileFormat: function(opts) {
+      return `${opts.cid}.${opts.capabilities}.xml`;
+    }
+  },
   //
   // If you are using Cucumber you need to specify the location of your step definitions.
   cucumberOpts: {
-    require: ["./steps"], // <string[]> (file/dir) require files before executing features
+    require: ["./pages"], // <string[]> (file/dir) require files before executing features
     backtrace: false, // <boolean> show full backtrace for errors
     compiler: [], // <string[]> ("extension:module") require files with the given EXTENSION after requiring MODULE (repeatable)
     dryRun: false, // <boolean> invoke formatters without executing steps
@@ -142,6 +139,7 @@ exports.config = {
     tags: [], // <string[]> (expression) only execute the features or scenarios with tags matching the expression
     timeout: 20000, // <number> timeout for step definitions
     ignoreUndefinedDefinitions: false, // <boolean> Enable this config to treat undefined definitions as warnings.
+    failAmbiguousDefinitions: true
   },
 
   //
@@ -167,6 +165,7 @@ exports.config = {
   before: function() {
     var chai = require("chai");
     global.expect = (value) => chai.expect(value);
+    global.pages = require("./pages/index");
   },
   //
   // Hook that gets executed before the suite starts
@@ -216,4 +215,4 @@ exports.config = {
   // possible to defer the end of the process using a promise.
   // onComplete: function(exitCode) {
   // }
-}
+};
