@@ -26,7 +26,6 @@
     "wdio-cucumber-framework": "^0.2.15",
     "wdio-cucumber-reporter": "0.0.2",
     "wdio-junit-reporter": "^0.2.0",
-    "wdio-phantomjs-service": "^0.2.2",
     "wdio-selenium-standalone-service": "0.0.8",
     "webdriverio": "^4.6.2"
   }
