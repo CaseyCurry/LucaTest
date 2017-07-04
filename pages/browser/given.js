@@ -1,11 +1,7 @@
 "use strict";
 
-module.exports = function given() {
-  this.Given(
-    /^I open the home page$/,
-    (done) => {
-      browser.url(browser.options.baseUrl);
-      done();
-    }
-  );
+module.exports = (Given) {
+  Given("I open the home page", () => {
+    return this.driver.get("http://localhost:13000");
+  });
 };

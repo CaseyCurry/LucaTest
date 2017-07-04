@@ -5,7 +5,7 @@ Feature: Register a New User
 
   Background:
     Given I open the home page
-    When I try to access a secured area of the site
+    When I try to access a secured area of the home page
 
   @ContinuousIntegration
   Scenario: The user must enter a strong password.
