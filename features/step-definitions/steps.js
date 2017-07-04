@@ -1,7 +1,9 @@
 const webdriver = require("selenium-webdriver");
 const { defineSupportCode } = require("cucumber");
 
-defineSupportCode(function({ Given, When, Then }) {
+defineSupportCode(function({ Given, When, Then, setDefaultTimeout }) {
+  setDefaultTimeout(10 * 1000);
+
   Given("I open the home page", function() {
     return this.driver.get("http://localhost:13000");
   });

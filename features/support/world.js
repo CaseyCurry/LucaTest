@@ -4,7 +4,8 @@ const webdriver = require("selenium-webdriver");
 const { defineSupportCode } = require("cucumber");
 
 function CustomWorld() {
-  this.driver = new webdriver.Builder()
+  this.driver = new webdriver
+    .Builder()
     .forBrowser("chrome")
     .build();
   this.expect = (value) => chai.expect(value);
