@@ -1,3 +1,5 @@
+"use strict";
+
 const webdriver = require("selenium-webdriver");
 const { defineSupportCode } = require("cucumber");
 

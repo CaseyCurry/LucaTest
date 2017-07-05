@@ -1,3 +1,5 @@
+"use strict";
+
 const { defineSupportCode } = require("cucumber");
 const reporter = require("cucumber-html-reporter");
 
