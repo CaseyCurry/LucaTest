@@ -24,7 +24,6 @@
     "cucumber": "^2.3.1",
     "cucumber-html-reporter": "^2.0.0",
     "eslint": "^3.16.1",
-    "geckodriver": "^1.7.1",
     "selenium-webdriver": "^3.4.0"
   }
 }
