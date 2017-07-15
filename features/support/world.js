@@ -1,19 +1,18 @@
 "use strict";
 
 const chai = require("chai");
-require("geckodriver");
+require("chromedriver");
 const webdriver = require("selenium-webdriver");
 const { defineSupportCode } = require("cucumber");
 
 function CustomWorld() {
   this.driver = new webdriver
     .Builder()
-    .forBrowser("firefox")
-    .usingServer("http://localhost:4444/wd/hub")
+    .forBrowser("chrome")
     .build();
   this.expect = (value) => chai.expect(value);
 }
 
 defineSupportCode(function({ setWorldConstructor }) {
   setWorldConstructor(CustomWorld);
-})
+});
