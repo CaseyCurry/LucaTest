@@ -14,10 +14,10 @@
       "type": "git"
     },
     {
-      "pipeline": "Application",
+      "pipeline": "LucaApp",
       "stage": "Containerize",
       "type": "dependency",
-      "name": "Application"
+      "name": "LucaApp"
     },
     {
       "pipeline": "CategoriesApi",
@@ -78,7 +78,7 @@
       "tasks": [{
         "type": "fetch",
         "run_if": "passed",
-        "pipeline": "Application",
+        "pipeline": "LucaApp",
         "stage": "Containerize",
         "job": "Containerize",
         "is_source_a_file": false,
