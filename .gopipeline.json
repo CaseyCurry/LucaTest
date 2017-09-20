@@ -1,0 +1,206 @@
+{
+  "name": "Luca",
+  "environment_variables": [],
+  "group": "Map",
+  "materials": [{
+      "url": "https://github.com/caseycurry/LucaTest",
+      "branch": "master",
+      "filter": {
+        "ignore": []
+      },
+      "destination": null,
+      "auto_update": true,
+      "name": "Test",
+      "type": "git"
+    },
+    {
+      "pipeline": "Application",
+      "stage": "Containerize",
+      "type": "dependency",
+      "name": "Application"
+    },
+    {
+      "pipeline": "CategoriesApi",
+      "stage": "Containerize",
+      "type": "dependency",
+      "name": "CategoriesApi"
+    },
+    {
+      "pipeline": "CheckingAccountApi",
+      "stage": "Containerize",
+      "type": "dependency",
+      "name": "CheckingAccountApi"
+    },
+    {
+      "pipeline": "CheckingAccountClient",
+      "stage": "Containerize",
+      "type": "dependency",
+      "name": "CheckingAccountClient"
+    },
+    {
+      "pipeline": "UsersApi",
+      "stage": "Containerize",
+      "type": "dependency",
+      "name": "UsersApi"
+    },
+    {
+      "pipeline": "UsersClient",
+      "stage": "Containerize",
+      "type": "dependency",
+      "name": "UsersClient"
+    }
+  ],
+  "stages": [{
+    "name": "TestEndToEnd",
+    "fetch_materials": true,
+    "never_cleanup_artifacts": false,
+    "clean_working_directory": true,
+    "environment_variables": [{
+      "name": "PATH",
+      "value": "/usr/local/bin:/usr/bin:/bin"
+    }],
+    "jobs": [{
+      "name": "Test",
+      "environment_variables": [],
+      "tabs": [{
+        "name": "Report",
+        "path": "cucumber-report.html"
+      }],
+      "resources": [],
+      "artifacts": [{
+        "source": "cucumber-report.html",
+        "destination": null,
+        "type": "build"
+      }],
+      "properties": [],
+      "run_instance_count": null,
+      "timeout": 0,
+      "tasks": [{
+        "type": "fetch",
+        "run_if": "passed",
+        "pipeline": "Application",
+        "stage": "Containerize",
+        "job": "Containerize",
+        "is_source_a_file": false,
+        "source": "container",
+        "destination": "application"
+      }, {
+        "type": "fetch",
+        "run_if": "passed",
+        "pipeline": "CategoriesApi",
+        "stage": "Containerize",
+        "job": "Containerize",
+        "is_source_a_file": false,
+        "source": "container",
+        "destination": "services/categories/api"
+      }, {
+        "type": "fetch",
+        "run_if": "passed",
+        "pipeline": "CategoriesApi",
+        "stage": "Build",
+        "job": "Build",
+        "is_source_a_file": false,
+        "source": ".nomad.json",
+        "destination": "services/categories/api/.nomad.json"
+      }, {
+        "type": "fetch",
+        "run_if": "passed",
+        "pipeline": "CheckingAccountApi",
+        "stage": "Containerize",
+        "job": "Containerize",
+        "is_source_a_file": false,
+        "source": "container",
+        "destination": "services/checking-account/api"
+      }, {
+        "type": "fetch",
+        "run_if": "passed",
+        "pipeline": "CheckingAccountClient",
+        "stage": "Containerize",
+        "job": "Containerize",
+        "is_source_a_file": false,
+        "source": "container",
+        "destination": "services/checking-account/client"
+      }, {
+        "type": "fetch",
+        "run_if": "passed",
+        "pipeline": "UsersApi",
+        "stage": "Containerize",
+        "job": "Containerize",
+        "is_source_a_file": false,
+        "source": "container",
+        "destination": "services/users/api"
+      }, {
+        "type": "fetch",
+        "run_if": "passed",
+        "pipeline": "UsersClient",
+        "stage": "Containerize",
+        "job": "Containerize",
+        "is_source_a_file": false,
+        "source": "container",
+        "destination": "services/users/client"
+      }, {
+        "type": "exec",
+        "run_if": "passed",
+        "on_cancel": null,
+        "command": "/bin/bash",
+        "arguments": [
+          "-c",
+          "$(which npm) install --ignore-scripts"
+        ],
+        "working_directory": null
+      }, {
+        "type": "exec",
+        "run_if": "passed",
+        "on_cancel": null,
+        "command": "/usr/local/bin/vagrant",
+        "arguments": [
+          "up"
+        ],
+        "working_directory": null
+      }, {
+        "type": "exec",
+        "run_if": "passed",
+        "on_cancel": null,
+        "command": "/usr/local/bin/vagrant",
+        "arguments": [
+          "ssh",
+          "-c",
+          "sudo /bin/bash -c \"source /vagrant/scripts/test/start-application.sh\""
+        ],
+        "working_directory": null
+      }, {
+        "type": "exec",
+        "run_if": "passed",
+        "on_cancel": null,
+        "command": "/usr/local/bin/vagrant",
+        "arguments": [
+          "ssh",
+          "-c",
+          "cd /vagrant && $(which npm) rebuild"
+        ],
+        "working_directory": null
+      }, {
+        "type": "exec",
+        "run_if": "passed",
+        "on_cancel": null,
+        "command": "/usr/local/bin/vagrant",
+        "arguments": [
+          "ssh",
+          "-c",
+          "cd /vagrant/test && xvfb-run --server-args='-screen 0, 375x667x16' ./node_modules/.bin/cucumber-js --tags=@ContinuousIntegration -f json:cucumber-report.json"
+        ],
+        "working_directory": null
+      }, {
+        "type": "exec",
+        "run_if": "any",
+        "on_cancel": null,
+        "command": "/usr/local/bin/vagrant",
+        "arguments": [
+          "destroy",
+          "-f"
+        ],
+        "working_directory": null
+      }]
+    }]
+  }]
+}
